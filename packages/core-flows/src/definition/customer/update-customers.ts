@@ -3,7 +3,7 @@ import {
   CustomerDTO,
   FilterableCustomerProps,
   ICustomerModuleService,
-  CustomerUpdateableFields,
+  CustomerUpdatableFields,
 } from "@medusajs/types"
 import {
   getSelectsAndRelationsFromObjectArray,
@@ -18,7 +18,7 @@ import {
 
 type UpdateCustomerStepInput = {
   selector: FilterableCustomerProps
-  update: CustomerUpdateableFields
+  update: CustomerUpdatableFields
 }
 
 const updateCustomerStepId = "update-customer"

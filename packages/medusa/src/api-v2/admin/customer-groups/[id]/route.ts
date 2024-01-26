@@ -1,10 +1,10 @@
 import {
-  updateCustomersWorkflow,
-  deleteCustomersWorkflow,
+  updateCustomerGroupsWorkflow,
+  deleteCustomerGroupsWorkflow,
 } from "@medusajs/core-flows"
 import { ModuleRegistrationName } from "@medusajs/modules-sdk"
 import {
-  CustomerUpdatableFields,
+  CustomerGroupUpdatableFields,
   ICustomerModuleService,
 } from "@medusajs/types"
 import { MedusaRequest, MedusaResponse } from "../../../../types/routing"
@@ -23,11 +23,11 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
 }
 
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
-  const updateCampaigns = updateCustomersWorkflow(req.scope)
+  const updateCampaigns = updateCustomerGroupsWorkflow(req.scope)
   const { result, errors } = await updateCampaigns.run({
     input: {
       selector: { id: req.params.id },
-      update: req.validatedBody as CustomerUpdatableFields,
+      update: req.validatedBody as CustomerGroupUpdatableFields,
     },
     throwOnError: false,
   })
@@ -36,12 +36,12 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     throw errors[0].error
   }
 
-  res.status(200).json({ customer: result[0] })
+  res.status(200).json({ group: result[0] })
 }
 
 export const DELETE = async (req: MedusaRequest, res: MedusaResponse) => {
   const id = req.params.id
-  const deleteCampaigns = deleteCustomersWorkflow(req.scope)
+  const deleteCampaigns = deleteCustomerGroupsWorkflow(req.scope)
 
   const { errors } = await deleteCampaigns.run({
     input: { ids: [id] },

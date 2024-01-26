@@ -8,7 +8,6 @@ import {
   CustomerTypes,
   SoftDeleteReturn,
   RestoreReturn,
-  CustomerUpdateableFields,
 } from "@medusajs/types"
 
 import {
@@ -19,11 +18,7 @@ import {
   isString,
   isObject,
 } from "@medusajs/utils"
-import {
-  entityNameToLinkableKeysMap,
-  LinkableKeys,
-  joinerConfig,
-} from "../joiner-config"
+import { entityNameToLinkableKeysMap, joinerConfig } from "../joiner-config"
 import * as services from "../services"
 
 type InjectedDependencies = {
@@ -111,24 +106,24 @@ export default class CustomerModuleService implements ICustomerModuleService {
 
   update(
     customerId: string,
-    data: CustomerUpdateableFields,
+    data: CustomerTypes.CustomerUpdatableFields,
     sharedContext?: Context
   ): Promise<CustomerTypes.CustomerDTO>
   update(
     customerIds: string[],
-    data: CustomerUpdateableFields,
+    data: CustomerTypes.CustomerUpdatableFields,
     sharedContext?: Context
   ): Promise<CustomerTypes.CustomerDTO[]>
   update(
     selector: CustomerTypes.FilterableCustomerProps,
-    data: CustomerUpdateableFields,
+    data: CustomerTypes.CustomerUpdatableFields,
     sharedContext?: Context
   ): Promise<CustomerTypes.CustomerDTO[]>
 
   @InjectTransactionManager("baseRepository_")
   async update(
     idsOrSelector: string | string[] | CustomerTypes.FilterableCustomerProps,
-    data: CustomerUpdateableFields,
+    data: CustomerTypes.CustomerUpdatableFields,
     @MedusaContext() sharedContext: Context = {}
   ) {
     let updateData: CustomerTypes.UpdateCustomerDTO[] = []
@@ -291,17 +286,17 @@ export default class CustomerModuleService implements ICustomerModuleService {
 
   async updateCustomerGroup(
     groupId: string,
-    data: Partial<CustomerTypes.CreateCustomerGroupDTO>,
+    data: CustomerTypes.CustomerGroupUpdatableFields,
     sharedContext?: Context
   ): Promise<CustomerTypes.CustomerGroupDTO>
   async updateCustomerGroup(
     groupIds: string[],
-    data: Partial<CustomerTypes.CreateCustomerGroupDTO>,
+    data: CustomerTypes.CustomerGroupUpdatableFields,
     sharedContext?: Context
   ): Promise<CustomerTypes.CustomerGroupDTO[]>
   async updateCustomerGroup(
     selector: CustomerTypes.FilterableCustomerGroupProps,
-    data: Partial<CustomerTypes.CreateCustomerGroupDTO>,
+    data: CustomerTypes.CustomerGroupUpdatableFields,
     sharedContext?: Context
   ): Promise<CustomerTypes.CustomerGroupDTO[]>
 
@@ -311,7 +306,7 @@ export default class CustomerModuleService implements ICustomerModuleService {
       | string
       | string[]
       | CustomerTypes.FilterableCustomerGroupProps,
-    data: Partial<CustomerTypes.CreateCustomerGroupDTO>,
+    data: CustomerTypes.CustomerGroupUpdatableFields,
     @MedusaContext() sharedContext: Context = {}
   ) {
     let updateData: CustomerTypes.UpdateCustomerGroupDTO[] = []
