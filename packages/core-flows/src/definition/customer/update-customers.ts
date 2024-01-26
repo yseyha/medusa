@@ -66,7 +66,7 @@ const updateCustomersStep = createStep(
 
 type WorkflowInput = UpdateCustomerStepInput
 
-export const updateCustomersWorkflowId = "create-promotions"
+export const updateCustomersWorkflowId = "update-customers"
 export const updateCustomersWorkflow = createWorkflow(
   updateCustomersWorkflowId,
   (input: WorkflowData<WorkflowInput>): WorkflowData<CustomerDTO[]> => {

@@ -25,7 +25,12 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
 
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   const createCustomers = createCustomersWorkflow(req.scope)
-  const customersData = [req.validatedBody as CreateCustomerDTO]
+  const customersData = [
+    {
+      ...(req.validatedBody as CreateCustomerDTO),
+      created_by: req.user!.id,
+    },
+  ]
 
   const { result, errors } = await createCustomers.run({
     input: { customersData },

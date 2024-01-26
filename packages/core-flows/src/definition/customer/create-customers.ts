@@ -16,7 +16,7 @@ const createCustomersStep = createStep(
   createCustomersStepId,
   async (data: CreateCustomerDTO[], { container }) => {
     const service = container.resolve<ICustomerModuleService>(
-      ModuleRegistrationName.PROMOTION
+      ModuleRegistrationName.CUSTOMER
     )
 
     const createdCustomers = await service.create(data)
@@ -31,11 +31,11 @@ const createCustomersStep = createStep(
       return
     }
 
-    const promotionModule = container.resolve<ICustomerModuleService>(
-      ModuleRegistrationName.PROMOTION
+    const service = container.resolve<ICustomerModuleService>(
+      ModuleRegistrationName.CUSTOMER
     )
 
-    await promotionModule.delete(createdCustomerIds)
+    await service.delete(createdCustomerIds)
   }
 )
 

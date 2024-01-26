@@ -12,7 +12,7 @@ const adminHeaders = {
   headers: { "x-medusa-access-token": "test_token" },
 }
 
-describe("POST /admin/customers", () => {
+describe("POST /admin/customers/:id", () => {
   let dbConnection
   let appContainer
   let shutdownServer
@@ -43,13 +43,17 @@ describe("POST /admin/customers", () => {
     await db.teardown()
   })
 
-  it("should create a customer", async () => {
+  it("should update a customer", async () => {
+    const customer = await customerModuleService.create({
+      first_name: "John",
+      last_name: "Doe",
+    })
+
     const api = useApi() as any
     const response = await api.post(
-      `/admin/customers`,
+      `/admin/customers/${customer.id}`,
       {
-        first_name: "John",
-        last_name: "Doe",
+        first_name: "Jane",
       },
       adminHeaders
     )
@@ -58,9 +62,8 @@ describe("POST /admin/customers", () => {
     expect(response.data.customer).toEqual(
       expect.objectContaining({
         id: expect.any(String),
-        first_name: "John",
+        first_name: "Jane",
         last_name: "Doe",
-        created_by: "admin_user",
       })
     )
   })
