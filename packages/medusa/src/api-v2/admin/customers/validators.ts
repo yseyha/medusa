@@ -120,6 +120,11 @@ export class AdminPostCustomersReq {
   @IsString()
   @IsOptional()
   email?: string
+
+  @IsNotEmpty()
+  @IsString()
+  @IsOptional()
+  phone?: string
 }
 
 export class AdminPostCustomersCustomerReq {
@@ -142,4 +147,9 @@ export class AdminPostCustomersCustomerReq {
   @IsString()
   @IsOptional()
   email?: string
+
+  @IsNotEmpty()
+  @IsString()
+  @IsOptional()
+  phone?: string
 }
