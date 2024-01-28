@@ -1,17 +1,17 @@
 import Scrypt from "scrypt-kdf"
+import { NextFunction, Request, Response } from "express"
+import passport from "passport"
 import { AuthenticateResult } from "../types/auth"
 import { Customer, User } from "../models"
 import { TransactionBaseService } from "../interfaces"
 import UserService from "./user"
 import CustomerService from "./customer"
 import { EntityManager } from "typeorm"
-import { Logger } from "@medusajs/types"
 
 type InjectedDependencies = {
   manager: EntityManager
   userService: UserService
   customerService: CustomerService
-  logger: Logger
 }
 
 /**
@@ -20,15 +20,13 @@ type InjectedDependencies = {
 class AuthService extends TransactionBaseService {
   protected readonly userService_: UserService
   protected readonly customerService_: CustomerService
-  protected readonly logger_: Logger
 
-  constructor({ userService, customerService, logger }: InjectedDependencies) {
+  constructor({ userService, customerService }: InjectedDependencies) {
     // eslint-disable-next-line prefer-rest-params
     super(arguments[0])
 
     this.userService_ = userService
     this.customerService_ = customerService
-    this.logger_ = logger
   }
 
   /**
@@ -110,7 +108,7 @@ class AuthService extends TransactionBaseService {
           }
         }
       } catch (error) {
-        this.logger_.log("error ->", error)
+        console.log("error ->", error)
         // ignore
       }
 
@@ -119,6 +117,22 @@ class AuthService extends TransactionBaseService {
         error: "Invalid email or password",
       }
     })
+  }
+
+  /**
+   * Middleware function to verify a user session using passwport.
+   * Can be overridden to apply custom session verification.
+   * @param {Request} req - the request object
+   * @param {Response} res - the response object
+   * @param {NextFunction} next - the next request handler
+   * @return {void}
+   */
+  async verifySession(req: Request, res: Response, next: NextFunction): Promise<void> {
+    passport.authenticate(["admin-session", "admin-bearer", "admin-api-token"], { session: false })(
+      req,
+      res,
+      next
+    ) 
   }
 
   /**
@@ -169,6 +183,32 @@ class AuthService extends TransactionBaseService {
       }
     })
   }
+
+  /**
+   * Middleware function to verify a customer session using passwport.
+   * Can be overridden to apply custom session verification.
+   * @param {Request} req - the request object
+   * @param {Response} res - the response object
+   * @param {NextFunction} next - the next request handler
+   * @return {void}
+   */
+    async verifyCustomerSession(req: Request, res: Response, next: NextFunction): Promise<void> {
+      passport.authenticate(
+        ["store-session", "store-bearer"],
+        { session: false },
+        (err, user) => {
+          if (err) {
+            return next(err)
+          }
+  
+          if (user) {
+            req.user = user
+          }
+  
+          return next()
+        }
+      )(req, res, next)
+    }
 }
 
 export default AuthService
